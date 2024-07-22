@@ -6,8 +6,6 @@ export const signup = async (req, res) => {
    try {
     const {fullname, username, password, confirmPassword, gender} = req.body
 
-    console.log(req.body)
-
     if(password != confirmPassword){
         return res.status(400).json({error: "Passwords don't match"})
     }
@@ -34,7 +32,6 @@ export const signup = async (req, res) => {
     })
     
     if(newUser){
-        console.log(newUser._id);
         generateTokenAndSetCookie(newUser._id, res)
         await newUser.save()
         res.status(201).json({
@@ -57,8 +54,7 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const {username, password} = req.body
-        console.log(username);
-        console.log(password);
+
         const user = await User.findOne({username})
         const isPassCorrect = await bcrypt.compare(password, user?.password || "")
         if(!user || !isPassCorrect){
